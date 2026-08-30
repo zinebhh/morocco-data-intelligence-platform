@@ -1,0 +1,62 @@
+@"
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Data
+*.parquet
+*.csv
+*.json
+*.log
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Docker
+*.pid
+*.sock
+
+# Airflow
+airflow.db
+airflow-webserver.pid
+logs/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Spark
+metastore_db/
+derby.log
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+"@ | Out-File -FilePath ".gitignore" -Encoding UTF8
