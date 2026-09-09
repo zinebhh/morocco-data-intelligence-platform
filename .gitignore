@@ -1,62 +1,31 @@
-@"
-# Python
-__pycache__/
-*.py[cod]
-*.so
-.Python
-env/
+# Environnements virtuels
 venv/
 .venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.pytest_cache/
-.coverage
-htmlcov/
-dist/
-build/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
 *.egg-info/
 
-# Data
-*.parquet
-*.csv
-*.json
-*.log
-*.db
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-.DS_Store
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# Docker
-*.pid
-*.sock
-
-# Airflow
+# Airflow (si tu gardes Airflow — option B)
+airflow/logs/
+airflow/dags/__pycache__/
 airflow.db
 airflow-webserver.pid
-logs/
 
-# Node
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-package-lock.json
+# Données brutes volumineuses (ne pas versionner les données, seulement le code)
+data/raw/*
+data/processed/*
+data_engineering/ingestion/raw/*
+!data_engineering/ingestion/raw/.gitkeep
 
-# Spark
-metastore_db/
-derby.log
+# Configs sensibles
+.env
+config/secrets.yaml
 
-# Terraform
-*.tfstate
-*.tfstate.*
-.terraform/
-"@ | Out-File -FilePath ".gitignore" -Encoding UTF8
+# IDE / OS
+.vscode/
+.idea/
+Thumbs.db
