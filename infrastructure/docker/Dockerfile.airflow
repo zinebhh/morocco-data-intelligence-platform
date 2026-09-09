@@ -1,0 +1,23 @@
+FROM apache/airflow:2.10.0-python3.10
+
+USER root
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+USER airflow
+
+# Copier les dépendances
+COPY infrastructure/docker/airflow/requirements.txt /tmp/requirements.txt
+
+# Installer les dépendances
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Variables d'environnement
+ENV AIRFLOW_HOME=/opt/airflow
+ENV PYTHONPATH=/opt/airflow
+
+# Définir le répertoire de travail
+WORKDIR ${AIRFLOW_HOME}
