@@ -1,47 +1,24 @@
-# Data Engineering - Version compatibles Python 3.14
-apache-airflow==2.10.0
-pyspark==3.5.3
-findspark==2.0.1
-
-# Data Science
-numpy==1.26.4
-pandas==2.2.2
-scikit-learn==1.5.1
-matplotlib==3.9.2
-seaborn==0.13.2
-
-# NLP
-spacy==3.7.5
-transformers==4.44.2
-sentence-transformers==3.0.1
-
-# Backend
-fastapi==0.112.0
-uvicorn==0.30.6
-pydantic==2.8.2
-sqlalchemy==2.0.32
-
-# Storage
-minio==7.2.7
-boto3==1.35.0
-
-# Database
-psycopg2-binary==2.9.9
-elasticsearch==8.14.0
-
-# Utils
-requests==2.32.3
-python-dotenv==1.0.1
-beautifulsoup4==4.12.3
-PyPDF2==3.0.1
-pdfplumber==0.11.2
-
-# Testing
-pytest==8.3.2
-pytest-cov==5.0.0
-
-# Monitoring
-prometheus-client==0.20.0
-
-# Note: hudi-spark n'est pas disponible via pip
-# Pour Hudi, utiliser: pyspark --packages org.apache.hudi:hudi-spark3.5-bundle_2.12:0.15.0
+annotated-types==0.8.0
+argon2-cffi==25.1.0
+argon2-cffi-bindings==26.1.0
+beautifulsoup4==4.15.0
+certifi==2026.7.22
+cffi==2.1.1
+charset-normalizer==3.5.1
+colorama==0.4.6
+idna==3.19
+iniconfig==2.3.0
+minio==7.2.20
+packaging==26.3
+pluggy==1.6.0
+pycparser==3.0
+pycryptodome==3.23.0
+pydantic==2.13.5
+pydantic_core==2.46.5
+Pygments==2.21.0
+pytest==9.1.1
+requests==2.34.2
+soupsieve==2.9.2
+typing-inspection==0.4.4
+typing_extensions==4.16.0
+urllib3==2.7.0

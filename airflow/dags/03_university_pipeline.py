@@ -1,5 +1,5 @@
 """
-DAG 3: Pipeline complet (Scraping + Upload MinIO)
+DAG 3: Pipeline complet
 """
 from datetime import datetime, timedelta
 from airflow import DAG
@@ -10,8 +10,7 @@ import logging
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, "/opt/airflow")
 
 logger = logging.getLogger(__name__)
 
@@ -19,8 +18,6 @@ default_args = {
     'owner': 'edudata',
     'depends_on_past': False,
     'start_date': datetime(2026, 1, 1),
-    'email_on_failure': False,
-    'email_on_retry': False,
     'retries': 2,
     'retry_delay': timedelta(minutes=2),
 }
@@ -30,22 +27,26 @@ def scrape_task(**context):
     
     university_name = Variable.get("scrape_university_name", default_var="Université Hassan II")
     university_url = Variable.get("scrape_university_url", default_var="https://www.univh2c.ma/")
-    max_pages = int(Variable.get("scrape_max_pages", default_var=10))
+    max_pages = int(Variable.get("scrape_max_pages", default_var=5))
     
     result = scrape_university(university_name, university_url, max_pages)
-    context['ti'].xcom_push(key='pages_count', value=result.get('pages_scraped', 0))
     context['ti'].xcom_push(key='output_dir', value=result.get('output_dir'))
+    context['ti'].xcom_push(key='pages_count', value=result.get('pages_scraped', 0))
     return result
 
 def upload_task(**context):
-    from data_engineering.common.minio_client import MinIOClient
+    from minio import Minio
     
     output_dir = context['ti'].xcom_pull(key='output_dir', task_ids='scrape_task')
     if not output_dir:
         return 0
     
-    minio_client = MinIOClient()
+    client = Minio('minio:9000', access_key='minioadmin', secret_key='minioadmin', secure=False)
     bucket = "raw-data"
+    
+    if not client.bucket_exists(bucket):
+        client.make_bucket(bucket)
+    
     university_name = Variable.get("scrape_university_name", default_var="Université Hassan II")
     prefix = f"universities/{university_name.lower().replace(' ', '_')}"
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -53,19 +54,19 @@ def upload_task(**context):
     files = 0
     for html_file in Path(output_dir).glob("*.html"):
         object_name = f"{prefix}/{timestamp}/{html_file.name}"
-        minio_client.client.fput_object(bucket, object_name, str(html_file))
+        client.fput_object(bucket, object_name, str(html_file))
         files += 1
     
+    logger.info(f"✅ {files} fichiers uploadés")
     return files
 
 with DAG(
-    'university_pipeline',
+    '03_university_pipeline',
     default_args=default_args,
-    description='Pipeline complet: Scraping + MinIO',
+    description='Pipeline complet Scraping + MinIO',
     schedule_interval='@weekly',
     catchup=False,
-    max_active_runs=1,
-    tags=['scraping', 'minio', 'complete']
+    tags=['complete']
 ) as dag:
     
     start = DummyOperator(task_id='start')
