@@ -9,8 +9,10 @@ services:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
+      POSTGRES_MULTIPLE_DATABASES: airflow,analytics,metabase
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d  
     ports:
       - "5432:5432"
     healthcheck:
@@ -95,6 +97,7 @@ services:
       - ./airflow/logs:/opt/airflow/logs
       - ./data_engineering:/opt/airflow/data_engineering
       - ./lakehouse:/opt/airflow/lakehouse
+      - ./data-science:/opt/airflow/data-science  
     ports:
       - "8080:8080"
     command: >
@@ -136,6 +139,7 @@ services:
       - ./airflow/logs:/opt/airflow/logs
       - ./data_engineering:/opt/airflow/data_engineering
       - ./lakehouse:/opt/airflow/lakehouse
+      - ./data-science:/opt/airflow/data-science  
     command: airflow scheduler
     depends_on:
       postgres:
