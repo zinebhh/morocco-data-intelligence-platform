@@ -217,7 +217,7 @@ with DAG(
     '10_topic_modeling',
     default_args=default_args,
     description='Topic Modeling avec LDA',
-    schedule_interval='@weekly',
+    schedule_interval=None,
     catchup=False,
     tags=['nlp', 'topic-modeling']
 ) as dag:

@@ -1,0 +1,66 @@
+{
+  "num_topics": 5,
+  "coherence": 0.40078544252139475,
+  "topics": {
+    "0": [
+      "university",
+      "study",
+      "students",
+      "morocco",
+      "was",
+      "were",
+      "moroccan",
+      "among",
+      "factors",
+      "cross"
+    ],
+    "1": [
+      "moroccan",
+      "morocco",
+      "university",
+      "study",
+      "from",
+      "that",
+      "quality",
+      "assessment",
+      "was",
+      "analysis"
+    ],
+    "2": [
+      "morocco",
+      "moroccan",
+      "universities",
+      "that",
+      "education",
+      "higher",
+      "university",
+      "international",
+      "innovation",
+      "energy"
+    ],
+    "3": [
+      "students",
+      "learning",
+      "moroccan",
+      "study",
+      "university",
+      "chatgpt",
+      "academic",
+      "education",
+      "that",
+      "efl"
+    ],
+    "4": [
+      "moroccan",
+      "university",
+      "writing",
+      "study",
+      "education",
+      "impact",
+      "higher",
+      "research",
+      "has",
+      "social"
+    ]
+  }
+}

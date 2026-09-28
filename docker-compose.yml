@@ -97,11 +97,12 @@ services:
       - ./airflow/logs:/opt/airflow/logs
       - ./data_engineering:/opt/airflow/data_engineering
       - ./lakehouse:/opt/airflow/lakehouse
-      - ./data-science:/opt/airflow/data-science  
+      - ./data-science:/opt/airflow/data-science 
+      - hf_cache:/home/airflow/.cache   
+      - ./nlp:/opt/airflow/nlp 
     ports:
       - "8080:8080"
     command: >
-      bash -c "
       airflow db migrate &&
       airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin 2>/dev/null;
       airflow webserver
@@ -139,7 +140,8 @@ services:
       - ./airflow/logs:/opt/airflow/logs
       - ./data_engineering:/opt/airflow/data_engineering
       - ./lakehouse:/opt/airflow/lakehouse
-      - ./data-science:/opt/airflow/data-science  
+      - ./data-science:/opt/airflow/data-science
+      - ./nlp:/opt/airflow/nlp
     command: airflow scheduler
     depends_on:
       postgres:
@@ -207,7 +209,7 @@ services:
   # ELASTICSEARCH 7.17
   # ============================================
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.15
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
     container_name: edudata-elasticsearch
     environment:
       - discovery.type=single-node
@@ -258,11 +260,57 @@ services:
     restart: always
     networks:
       - edudata-network
+  ollama:
+    image: ollama/ollama:latest
+    container_name: edudata-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - edudata-network  
+  edudata-api:
+    build:
+      context: ./airflow
+      dockerfile: Dockerfile
+    image: edudata-airflow:latest
+    container_name: edudata-api
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT=9200
+    volumes:
+      - ./nlp:/opt/airflow/nlp
+      - ./data_engineering:/opt/airflow/data_engineering
+    ports:
+      - "8000:8000"
+    user: airflow
+    working_dir: /opt/airflow
+    entrypoint: [""]                                    # ← AJOUTER (vide l'entrypoint Airflow)
+    command: >
+      bash -c "
+      export PATH=/home/airflow/.local/bin:$$PATH &&
+      cd /opt/airflow &&
+      python3 -m uvicorn nlp.rag.api:app --host 0.0.0.0 --port 8000
+      "
+    healthcheck:
+      disable: true                                     # ← AJOUTER (désactive le healthcheck Airflow)
+    depends_on:
+      - postgres
+      - elasticsearch
+      - ollama
+    networks:
+      - edudata-network
 volumes:
   postgres_data:
   minio_data:
   elasticsearch_data:
   metabase_data:
+  ollama_data:
+  hf_cache: 
 
 networks:
   edudata-network:

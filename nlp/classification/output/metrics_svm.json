@@ -1,0 +1,10 @@
+{
+  "accuracy": 0.65,
+  "precision": 0.5842857142857143,
+  "recall": 0.65,
+  "f1_score": 0.5987878787878789,
+  "model_type": "svm",
+  "train_size": 80,
+  "test_size": 20,
+  "num_classes": 5
+}

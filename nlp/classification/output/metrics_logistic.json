@@ -1,0 +1,10 @@
+{
+  "accuracy": 0.5,
+  "precision": 0.5,
+  "recall": 0.5,
+  "f1_score": 0.465,
+  "model_type": "logistic",
+  "train_size": 80,
+  "test_size": 20,
+  "num_classes": 5
+}
